@@ -1,0 +1,10 @@
+## except filename extenstion
+
+
+## except file
+
+
+## except directory
+.vscode/
+__pycache__/
+.ipynb_checkpoint/
