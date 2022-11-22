@@ -376,7 +376,8 @@ class MMDetWandbHook(WandbLoggerHook):
             wandb_boxes = self._get_wandb_bboxes(bboxes, labels)
 
             # Get dict of masks to be logged.
-            if masks is not None:
+            # if masks is not None:
+            if False:
                 wandb_masks = self._get_wandb_masks(
                     masks,
                     labels,
