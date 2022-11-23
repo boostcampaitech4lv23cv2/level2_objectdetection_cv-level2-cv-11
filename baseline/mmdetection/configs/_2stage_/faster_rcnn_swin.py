@@ -1,5 +1,3 @@
-import wandb
-
 _base_ = [
     './_base_/datasets/coco_detection.py', 
     './_base_/models/faster_rcnn_r50_fpn.py', 
