@@ -2,9 +2,30 @@ checkpoint_config = dict(interval=1)
 # yapf:disable
 log_config = dict(
     interval=50,
-    hooks=[
-        dict(type='TextLoggerHook'),
-        # dict(type='TensorboardLoggerHook')
+    hooks = [
+        dict(type='TextLoggerHook'),       
+        dict(type='MMDetWandbHook',
+             
+            #  wandb init 설정
+            init_kwargs=dict(
+                entity = 'miho',
+                project = 'Detection-Competition', 
+                name = '1123_gun_cascade-rcnn', 
+                tags = ['cascade_rcnn', 'focal_loss'],
+                notes = 'cascade-rcnn', 
+            ),
+            # Logging interval (iterations)
+            interval = 50,
+            # Save the checkpoint at every checkpoint interval as W&B Artifacts. Default False
+            # You can reliably store these checkpoints as W&B Artifacts by using the log_checkpoint=True argument in MMDetWandbHook. 
+            # This feature depends on the MMCV's CheckpointHook that periodically save the model checkpoints. 
+            # The period is determined by checkpoint_config.interval.
+            log_checkpoint=True,   
+            log_checkpoint_metadata=True,
+            # The number of validation images to be logged. If zero, the evaluation won't be logged. Defaults to 100.
+            num_eval_images=100,           
+            # Threshold for bounding box scores. Defaults to 0.3.
+            bbox_score_thr=0.3)     
     ])
 # yapf:enable
 custom_hooks = [dict(type='NumClassCheckHook')]
