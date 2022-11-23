@@ -10,8 +10,8 @@ log_config = dict(
             init_kwargs=dict(
                 entity = 'miho',
                 project = 'Detection-Competition', 
-                name = '1123_gun_cascade-rcnn', 
-                tags = ['cascade_rcnn', 'focal_loss'],
+                name = '실험일_수행인_model_특이사항', 
+                tags = ['최대한 많이, backbone, loss, dataset 등등 '],
                 notes = 'cascade-rcnn', 
             ),
             # Logging interval (iterations)
