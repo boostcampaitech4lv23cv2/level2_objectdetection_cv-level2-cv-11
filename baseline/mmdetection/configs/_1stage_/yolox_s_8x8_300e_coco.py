@@ -116,12 +116,12 @@ optimizer = dict(
     weight_decay=5e-4,
     nesterov=True,
     paramwise_cfg=dict(norm_decay_mult=0., bias_decay_mult=0.))
-optimizer_config = dict(grad_clip=None)
+optimizer_config = dict(max_norm=35, norm_type=2)로
 
 max_epochs = 31
 num_last_epochs = 15
 resume_from = None
-interval = 5
+interval = 3
 
 # learning policy
 lr_config = dict(
@@ -169,3 +169,5 @@ log_config = dict(interval=50)
 # USER SHOULD NOT CHANGE ITS VALUES.
 # base_batch_size = (8 GPUs) x (8 samples per GPU)
 auto_scale_lr = dict(base_batch_size=64)
+
+#load_from='https://download.openmmlab.com/mmdetection/v2.0/yolox/yolox_s_8x8_300e_coco/yolox_s_8x8_300e_coco_20211121_095711-4592a793.pth'

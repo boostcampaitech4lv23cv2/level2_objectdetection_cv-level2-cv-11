@@ -13,9 +13,9 @@ log_config = dict(
             init_kwargs=dict(
                 entity = 'miho',
                 project = 'Detection-Competition', 
-                name = '1124_tj_yolox_s_default', 
-                tags = ['YOLOX, SGD, mixup, mosaic '],
-                notes = '하이퍼파라미터 변인통제를 위한 default모델', 
+                name = '실험일_수행인_model_특이사항', 
+                tags = ['최대한 많이, backbone, loss, dataset 등등 '],
+                notes = 'cascade-rcnn', 
             ),
             # Logging interval (iterations)
             interval = 50,
