@@ -588,3 +588,15 @@ class MMDetWandbHook(WandbLoggerHook):
         else:
             aliases = ['latest', f'iter_{idx}']
         self.wandb.run.log_artifact(pred_artifact, aliases=aliases)
+
+    @master_only
+    def log(self, runner) -> None:
+        tags = self.get_loggable_tags(runner)
+        if tags:
+            tags['epoch'] = self.get_epoch(runner)
+            if self.with_step:
+                self.wandb.log(
+                    tags, step=self.get_iter(runner), commit=self.commit)
+            else:
+                tags['global_step'] = self.get_iter(runner)
+                self.wandb.log(tags, commit=self.commit)
