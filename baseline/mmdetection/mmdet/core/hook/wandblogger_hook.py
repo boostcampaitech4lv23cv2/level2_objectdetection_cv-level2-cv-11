@@ -661,6 +661,7 @@ class MMDetWandbHook(WandbLoggerHook):
         y = precision[0, :, :, 0, 2] # (101, 10)
         y = np.mean(y, axis=1)       # (101, )
         ax.plot(x, y, linewidth=3, color='blue', label='all classes %.3f mAP@0.5' % np.mean(y))
+        ax.set_title(f'AP @ IoU50 (Epoch {self.epoch})')
         ax.set_xlabel('Recall')
         ax.set_ylabel('Precision')
         ax.set_xlim(0, 1)
