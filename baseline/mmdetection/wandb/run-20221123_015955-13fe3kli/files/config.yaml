@@ -1,0 +1,514 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.13.5
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.7.15
+    start_time: 1669168795.710157
+    t:
+      1:
+      - 1
+      - 5
+      - 37
+      - 38
+      - 41
+      - 53
+      - 55
+      - 80
+      2:
+      - 1
+      - 5
+      - 37
+      - 38
+      - 41
+      - 53
+      - 55
+      - 80
+      3:
+      - 3
+      - 23
+      4: 3.7.15
+      5: 0.13.5
+      8:
+      - 5
+auto_resume:
+  desc: null
+  value: false
+auto_scale_lr:
+  desc: null
+  value:
+    base_batch_size: 16
+    enable: false
+checkpoint_config:
+  desc: null
+  value:
+    interval: 1
+    max_keep_ckpts: 3
+custom_hooks:
+  desc: null
+  value:
+  - type: NumClassCheckHook
+data:
+  desc: null
+  value:
+    samples_per_gpu: 4
+    test:
+      ann_file: /opt/ml/dataset/test.json
+      img_prefix: /opt/ml/dataset/
+      pipeline:
+      - type: LoadImageFromFile
+      - flip: false
+        img_scale:
+        - 512
+        - 512
+        transforms:
+        - keep_ratio: true
+          type: Resize
+        - type: RandomFlip
+        - mean:
+          - 123.675
+          - 116.28
+          - 103.53
+          std:
+          - 58.395
+          - 57.12
+          - 57.375
+          to_rgb: true
+          type: Normalize
+        - size_divisor: 32
+          type: Pad
+        - keys:
+          - img
+          type: ImageToTensor
+        - keys:
+          - img
+          type: Collect
+        type: MultiScaleFlipAug
+      type: CocoDataset
+    train:
+      ann_file: /opt/ml/dataset/train-kfold-0.json
+      classes:
+      - General trash
+      - Paper
+      - Paper pack
+      - Metal
+      - Glass
+      - Plastic
+      - Styrofoam
+      - Plastic bag
+      - Battery
+      - Clothing
+      img_prefix: /opt/ml/dataset/
+      pipeline:
+      - type: LoadImageFromFile
+      - type: LoadAnnotations
+        with_bbox: true
+      - img_scale:
+        - 512
+        - 512
+        keep_ratio: true
+        type: Resize
+      - flip_ratio: 0.5
+        type: RandomFlip
+      - mean:
+        - 123.675
+        - 116.28
+        - 103.53
+        std:
+        - 58.395
+        - 57.12
+        - 57.375
+        to_rgb: true
+        type: Normalize
+      - size_divisor: 32
+        type: Pad
+      - type: DefaultFormatBundle
+      - keys:
+        - img
+        - gt_bboxes
+        - gt_labels
+        type: Collect
+      type: CocoDataset
+    val:
+      ann_file: /opt/ml/dataset/val-kfold-0.json
+      classes:
+      - General trash
+      - Paper
+      - Paper pack
+      - Metal
+      - Glass
+      - Plastic
+      - Styrofoam
+      - Plastic bag
+      - Battery
+      - Clothing
+      img_prefix: /opt/ml/dataset/
+      pipeline:
+      - type: LoadImageFromFile
+      - flip: false
+        img_scale:
+        - 512
+        - 512
+        transforms:
+        - keep_ratio: true
+          type: Resize
+        - type: RandomFlip
+        - mean:
+          - 123.675
+          - 116.28
+          - 103.53
+          std:
+          - 58.395
+          - 57.12
+          - 57.375
+          to_rgb: true
+          type: Normalize
+        - size_divisor: 32
+          type: Pad
+        - keys:
+          - img
+          type: ImageToTensor
+        - keys:
+          - img
+          type: Collect
+        type: MultiScaleFlipAug
+      type: CocoDataset
+    workers_per_gpu: 2
+data_classes:
+  desc: null
+  value:
+  - General trash
+  - Paper
+  - Paper pack
+  - Metal
+  - Glass
+  - Plastic
+  - Styrofoam
+  - Plastic bag
+  - Battery
+  - Clothing
+data_root:
+  desc: null
+  value: /opt/ml/dataset/
+dataset_type:
+  desc: null
+  value: CocoDataset
+dist_params:
+  desc: null
+  value:
+    backend: nccl
+evaluation:
+  desc: null
+  value:
+    interval: 1
+    metric: bbox
+gpu_ids:
+  desc: null
+  value:
+  - 0
+img_norm_cfg:
+  desc: null
+  value:
+    mean:
+    - 123.675
+    - 116.28
+    - 103.53
+    std:
+    - 58.395
+    - 57.12
+    - 57.375
+    to_rgb: true
+load_from:
+  desc: null
+  value: null
+log_config:
+  desc: null
+  value:
+    hooks:
+    - type: TextLoggerHook
+    - bbox_score_thr: 0.3
+      init_kwargs:
+        project: mmdetection
+      interval: 10
+      log_checkpoint: true
+      log_checkpoint_metadata: true
+      num_eval_images: 100
+      type: MMDetWandbHook
+    interval: 50
+log_level:
+  desc: null
+  value: INFO
+lr_config:
+  desc: null
+  value:
+    policy: step
+    step:
+    - 8
+    - 11
+    warmup: linear
+    warmup_iters: 500
+    warmup_ratio: 0.001
+model:
+  desc: null
+  value:
+    backbone:
+      depth: 50
+      frozen_stages: 1
+      init_cfg:
+        checkpoint: torchvision://resnet50
+        type: Pretrained
+      norm_cfg:
+        requires_grad: true
+        type: BN
+      norm_eval: true
+      num_stages: 4
+      out_indices:
+      - 0
+      - 1
+      - 2
+      - 3
+      style: pytorch
+      type: ResNet
+    neck:
+      in_channels:
+      - 256
+      - 512
+      - 1024
+      - 2048
+      num_outs: 5
+      out_channels: 256
+      type: FPN
+    roi_head:
+      bbox_head:
+        bbox_coder:
+          target_means:
+          - 0.0
+          - 0.0
+          - 0.0
+          - 0.0
+          target_stds:
+          - 0.1
+          - 0.1
+          - 0.2
+          - 0.2
+          type: DeltaXYWHBBoxCoder
+        fc_out_channels: 1024
+        in_channels: 256
+        loss_bbox:
+          loss_weight: 1.0
+          type: L1Loss
+        loss_cls:
+          loss_weight: 1.0
+          type: CrossEntropyLoss
+          use_sigmoid: false
+        num_classes: 10
+        reg_class_agnostic: false
+        roi_feat_size: 7
+        type: Shared2FCBBoxHead
+      bbox_roi_extractor:
+        featmap_strides:
+        - 4
+        - 8
+        - 16
+        - 32
+        out_channels: 256
+        roi_layer:
+          output_size: 7
+          sampling_ratio: 0
+          type: RoIAlign
+        type: SingleRoIExtractor
+      type: StandardRoIHead
+    rpn_head:
+      anchor_generator:
+        ratios:
+        - 0.5
+        - 1.0
+        - 2.0
+        scales:
+        - 8
+        strides:
+        - 4
+        - 8
+        - 16
+        - 32
+        - 64
+        type: AnchorGenerator
+      bbox_coder:
+        target_means:
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        target_stds:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.0
+        type: DeltaXYWHBBoxCoder
+      feat_channels: 256
+      in_channels: 256
+      loss_bbox:
+        loss_weight: 1.0
+        type: L1Loss
+      loss_cls:
+        loss_weight: 1.0
+        type: CrossEntropyLoss
+        use_sigmoid: true
+      type: RPNHead
+    test_cfg:
+      rcnn:
+        max_per_img: 100
+        nms:
+          iou_threshold: 0.5
+          type: nms
+        score_thr: 0.05
+      rpn:
+        max_per_img: 1000
+        min_bbox_size: 0
+        nms:
+          iou_threshold: 0.7
+          type: nms
+        nms_pre: 1000
+    train_cfg:
+      rcnn:
+        assigner:
+          ignore_iof_thr: -1
+          match_low_quality: false
+          min_pos_iou: 0.5
+          neg_iou_thr: 0.5
+          pos_iou_thr: 0.5
+          type: MaxIoUAssigner
+        debug: false
+        pos_weight: -1
+        sampler:
+          add_gt_as_proposals: true
+          neg_pos_ub: -1
+          num: 512
+          pos_fraction: 0.25
+          type: RandomSampler
+      rpn:
+        allowed_border: -1
+        assigner:
+          ignore_iof_thr: -1
+          match_low_quality: true
+          min_pos_iou: 0.3
+          neg_iou_thr: 0.3
+          pos_iou_thr: 0.7
+          type: MaxIoUAssigner
+        debug: false
+        pos_weight: -1
+        sampler:
+          add_gt_as_proposals: false
+          neg_pos_ub: -1
+          num: 256
+          pos_fraction: 0.5
+          type: RandomSampler
+      rpn_proposal:
+        max_per_img: 1000
+        min_bbox_size: 0
+        nms:
+          iou_threshold: 0.7
+          type: nms
+        nms_pre: 2000
+    type: FasterRCNN
+mp_start_method:
+  desc: null
+  value: fork
+opencv_num_threads:
+  desc: null
+  value: 0
+optimizer:
+  desc: null
+  value:
+    lr: 0.02
+    momentum: 0.9
+    type: SGD
+    weight_decay: 0.0001
+optimizer_config:
+  desc: null
+  value:
+    grad_clip:
+      max_norm: 35
+      norm_type: 2
+resume_from:
+  desc: null
+  value: null
+runner:
+  desc: null
+  value:
+    max_epochs: 12
+    type: EpochBasedRunner
+test_pipeline:
+  desc: null
+  value:
+  - type: LoadImageFromFile
+  - flip: false
+    img_scale:
+    - 512
+    - 512
+    transforms:
+    - keep_ratio: true
+      type: Resize
+    - type: RandomFlip
+    - mean:
+      - 123.675
+      - 116.28
+      - 103.53
+      std:
+      - 58.395
+      - 57.12
+      - 57.375
+      to_rgb: true
+      type: Normalize
+    - size_divisor: 32
+      type: Pad
+    - keys:
+      - img
+      type: ImageToTensor
+    - keys:
+      - img
+      type: Collect
+    type: MultiScaleFlipAug
+train_pipeline:
+  desc: null
+  value:
+  - type: LoadImageFromFile
+  - type: LoadAnnotations
+    with_bbox: true
+  - img_scale:
+    - 512
+    - 512
+    keep_ratio: true
+    type: Resize
+  - flip_ratio: 0.5
+    type: RandomFlip
+  - mean:
+    - 123.675
+    - 116.28
+    - 103.53
+    std:
+    - 58.395
+    - 57.12
+    - 57.375
+    to_rgb: true
+    type: Normalize
+  - size_divisor: 32
+    type: Pad
+  - type: DefaultFormatBundle
+  - keys:
+    - img
+    - gt_bboxes
+    - gt_labels
+    type: Collect
+work_dir:
+  desc: null
+  value: ./work_dirs/faster_rcnn_r50_fpn_1x_trash
+workflow:
+  desc: null
+  value:
+  - - train
+    - 1
