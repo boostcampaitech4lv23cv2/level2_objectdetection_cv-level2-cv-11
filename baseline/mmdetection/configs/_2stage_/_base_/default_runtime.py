@@ -1,4 +1,7 @@
-checkpoint_config = dict(interval=1)
+checkpoint_config = dict(
+    interval = 1      # 모델이 저장되는 epoch 주기
+)
+
 # yapf:disable
 log_config = dict(
     interval=50,
