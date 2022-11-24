@@ -10,6 +10,9 @@ data = dict(
     val=dict(ann_file = '/opt/ml/dataset/val-tiny.json')
 )
 
+optimizer = dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.0001)
+optimizer_config = dict(grad_clip=None)     
+
 # log_config - 다양한 로거 후크를 초기화
 log_config = dict(
     hooks = [
