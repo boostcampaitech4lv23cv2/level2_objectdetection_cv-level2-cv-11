@@ -116,7 +116,9 @@ optimizer = dict(
     weight_decay=5e-4,
     nesterov=True,
     paramwise_cfg=dict(norm_decay_mult=0., bias_decay_mult=0.))
-optimizer_config = dict(max_norm=35, norm_type=2)로
+optimizer_config = dict(
+    grad_clip= dict(max_norm=35, norm_type=2)
+)
 
 max_epochs = 31
 num_last_epochs = 15
