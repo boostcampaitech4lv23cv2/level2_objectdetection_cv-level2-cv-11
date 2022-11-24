@@ -38,6 +38,21 @@ from detectron2.evaluation import (
     verify_results,
 )
 from detectron2.modeling import GeneralizedRCNNWithTTA
+# Data 등록 
+from detectron2.data.datasets import register_coco_instances
+# Register Dataset
+try:
+    register_coco_instances('coco_trash_train', {}, '../../dataset/train.json', '../../dataset/')
+except AssertionError:
+    pass
+
+try:
+    register_coco_instances('coco_trash_test', {}, '../../dataset/test.json', '../../dataset/')
+except AssertionError:
+    pass
+
+MetadataCatalog.get('coco_trash_train').thing_classes = ["General trash", "Paper", "Paper pack", "Metal", 
+                                                         "Glass", "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing"]
 
 
 def build_evaluator(cfg, dataset_name, output_folder=None):

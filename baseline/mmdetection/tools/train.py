@@ -90,6 +90,22 @@ def parse_args():
         '--auto-scale-lr',
         action='store_true',
         help='enable automatically scaling LR.')
+    
+    # wandb name/tag 동적할당
+    parser.add_argument(
+        '--name',
+        default= None,
+        type = str,
+        help = "프로젝트 이름 할당"
+    )
+    parser.add_argument(
+        '--tags',
+        default= None,
+        nargs='+',
+        type=str,
+        help = "프로젝트 태그 할당"
+    )
+    
     args = parser.parse_args()
     if 'LOCAL_RANK' not in os.environ:
         os.environ['LOCAL_RANK'] = str(args.local_rank)
@@ -109,6 +125,11 @@ def main():
     args = parse_args()
 
     cfg = Config.fromfile(args.config)
+    # # wandb name/tag 동적할당
+    if args.name != None:
+        cfg.log_config.hooks[1].init_kwargs.name = args.name
+    if args.tags != None:
+        cfg.log_config.hooks[1].init_kwargs.tags = args.tags
 
     # replace the ${key} with the value of cfg.key
     cfg = replace_cfg_vals(cfg)
