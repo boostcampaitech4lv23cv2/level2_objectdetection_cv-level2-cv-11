@@ -587,6 +587,11 @@ class CocoDataset(CustomDataset):
                     f'{ap[0]:.3f} {ap[1]:.3f} {ap[2]:.3f} {ap[3]:.3f} '
                     f'{ap[4]:.3f} {ap[5]:.3f}')
 
+                # Wandb hook에서 사용하기 위해 저장함
+                # TODO: metric segm, proposal, proposal_fast 을 사용하는 상황 파악 필요
+                if metric == 'bbox':
+                    self.cocoEval = cocoEval
+
         return eval_results
 
     def evaluate(self,
