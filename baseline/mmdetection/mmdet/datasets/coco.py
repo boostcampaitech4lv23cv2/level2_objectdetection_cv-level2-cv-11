@@ -58,6 +58,10 @@ class CocoDataset(CustomDataset):
                (127, 167, 115), (59, 105, 106), (142, 108, 45), (196, 172, 0),
                (95, 54, 80), (128, 76, 255), (201, 57, 1), (246, 0, 122),
                (191, 162, 208)]
+    
+    def __init__(self, **kwargs):
+        super(CocoDataset, self).__init__(**kwargs)
+        self.cocoEval = None
 
     def load_annotations(self, ann_file):
         """Load annotation from COCO style annotation file.
@@ -586,6 +590,11 @@ class CocoDataset(CustomDataset):
                 eval_results[f'{metric}_mAP_copypaste'] = (
                     f'{ap[0]:.3f} {ap[1]:.3f} {ap[2]:.3f} {ap[3]:.3f} '
                     f'{ap[4]:.3f} {ap[5]:.3f}')
+
+                # Wandb hook에서 사용하기 위해 저장함
+                # TODO: metric segm, proposal, proposal_fast 을 사용하는 상황 파악 필요
+                if metric == 'bbox':
+                    self.cocoEval = cocoEval
 
         return eval_results
 
