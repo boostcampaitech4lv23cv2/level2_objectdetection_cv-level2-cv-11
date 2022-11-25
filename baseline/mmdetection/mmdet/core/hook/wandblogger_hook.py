@@ -113,7 +113,7 @@ class MMDetWandbHook(WandbLoggerHook):
         self.log_evaluation = (num_eval_images > 0)
         self.ckpt_hook: CheckpointHook = None
         self.eval_hook: EvalHook = None
-        self.bbox_num: int = 0
+        self.bbox_num: int = -1
 
     def import_wandb(self):
         try:
@@ -619,6 +619,7 @@ class MMDetWandbHook(WandbLoggerHook):
                 tags['global_step'] = self.get_iter(runner)
                 self.wandb.log(tags, commit=self.commit)
     
+    #TODO: 함수 명 좀 더 일반적인 이름으로 바꾸기
     def _log_precisons(self, artifact):
         """
         Validation 된 뒤에 after_train_epoch => _log_eval_table 순서로 호출됨.
@@ -650,9 +651,22 @@ class MMDetWandbHook(WandbLoggerHook):
                         (map-boxes 라이브러리라고 가정했을 때)
         """
 
-        # 평과 결과 불러오기
+        # bbox 개수 불러오고 리셋
+        bbox_num = self.bbox_num
+        self.bbox_num = -1
+
+        # 평과 결과가 없으면 bbox_num만 기록
+        if self.val_dataset.cocoEval is None:
+            self.wandb.log({
+                'val/bbox_num': bbox_num,
+                'epoch': self.epoch,
+            })
+            return
+
+        # 평과 결과 불러오고 리셋
         cocoEval = self.val_dataset.cocoEval
         precision = cocoEval.eval['precision']
+        self.val_dataset.cocoEval = None
 
         assert precision.shape[2] == 10
 
@@ -690,6 +704,6 @@ class MMDetWandbHook(WandbLoggerHook):
         artifact.add(wimg, 'PR-Curve')
         self.wandb.log({
             'val/PR-Curve': wimg,
-            'val/bbox_num': self.bbox_num,
+            'val/bbox_num': bbox_num,
             'epoch': self.epoch,
         })
