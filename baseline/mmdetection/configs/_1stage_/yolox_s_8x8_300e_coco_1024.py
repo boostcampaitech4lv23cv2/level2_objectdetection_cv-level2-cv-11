@@ -1,6 +1,6 @@
 _base_ = ['./_base_/schedules/schedule_1x.py', './_base_/default_runtime.py']
 
-img_scale = (640, 640)  # height, width
+img_scale = (1024, 1024)  # height, width
 
 # model settings
 model = dict(
@@ -120,7 +120,7 @@ optimizer_config = dict(
     grad_clip= dict(max_norm=35, norm_type=2)
 )
 
-max_epochs = 300
+max_epochs = 3000
 num_last_epochs = 15
 resume_from = None
 interval = 10
