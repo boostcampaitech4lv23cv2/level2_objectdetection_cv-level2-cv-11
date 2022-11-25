@@ -1,1 +1,0 @@
-/opt/ml/level2_objectdetection_cv-level2-cv-11/baseline/mmdetection/work_dirs/faster_rcnn_r50_fpn_1x_coco/faster_rcnn_r50_fpn_1x_coco.py
