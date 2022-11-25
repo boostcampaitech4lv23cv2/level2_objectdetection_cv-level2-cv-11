@@ -23,7 +23,7 @@ log_config = dict(
             # You can reliably store these checkpoints as W&B Artifacts by using the log_checkpoint=True argument in MMDetWandbHook. 
             # This feature depends on the MMCV's CheckpointHook that periodically save the model checkpoints. 
             # The period is determined by checkpoint_config.interval.
-            log_checkpoint=True,   
+            log_checkpoint=False,
             log_checkpoint_metadata=True,
             # The number of validation images to be logged. If zero, the evaluation won't be logged. Defaults to 100.
             num_eval_images=100,           
