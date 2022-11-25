@@ -113,6 +113,7 @@ class MMDetWandbHook(WandbLoggerHook):
         self.log_evaluation = (num_eval_images > 0)
         self.ckpt_hook: CheckpointHook = None
         self.eval_hook: EvalHook = None
+        self.bbox_num: int = 0
 
     def import_wandb(self):
         try:
@@ -463,6 +464,13 @@ class MMDetWandbHook(WandbLoggerHook):
                     masks=wandb_masks,
                     classes=self.class_set))
 
+        # 평균 박스 개수 로그
+        cnt = 0
+        for result in results:
+            cnt += len(np.vstack(result))
+        cnt /= len(results)
+        self.bbox_num = cnt
+
     def _get_wandb_bboxes(self, bboxes, labels, log_gt=True):
         """Get list of structured dict for logging bounding boxes to W&B.
 
@@ -680,4 +688,8 @@ class MMDetWandbHook(WandbLoggerHook):
 
         wimg = self.wandb.Image(img)
         artifact.add(wimg, 'PR-Curve')
-        self.wandb.log({'PR-Curve': wimg})
+        self.wandb.log({
+            'val/PR-Curve': wimg,
+            'val/bbox_num': self.bbox_num,
+            'epoch': self.epoch,
+        })
