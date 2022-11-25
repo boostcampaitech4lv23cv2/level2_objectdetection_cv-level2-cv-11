@@ -1,6 +1,8 @@
 _base_ = [
     './_base_/datasets/coco_detection.py', './_base_/default_runtime.py'
 ]
+load_from = 'https://download.openmmlab.com/mmdetection/v2.0/detr/detr_r50_8x2_150e_coco/detr_r50_8x2_150e_coco_20201130_194835-2c4b8974.pth'
+
 model = dict(
     type='DETR',
     backbone=dict(
