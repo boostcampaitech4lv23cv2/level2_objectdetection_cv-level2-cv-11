@@ -1,8 +1,13 @@
 _base_ = [
     './_base_/models/faster_rcnn_r50_fpn_foloss.py',
     './_base_/datasets/coco_detection.py',
-    './_base_/schedules/schedule_1x.py', './_base_/default_runtime.py'
+    './_base_/schedules/schedule_1x.py',
+    './_base_/default_runtime.py'
 ]
+
+optimizer = dict(type='SGD', lr=0.001, momentum=0.9, weight_decay=0.0001)
+runner = dict(type='EpochBasedRunner', max_epochs=150)
+
 model = dict(
     roi_head=dict(
         type='DynamicRoIHead',
