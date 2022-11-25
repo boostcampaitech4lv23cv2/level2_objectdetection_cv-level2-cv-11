@@ -467,6 +467,12 @@ class MMDetWandbHook(WandbLoggerHook):
         # 평균 박스 개수 로그
         cnt = 0
         for result in results:
+            """
+            result: [(?, 5), ..., (?, 5)] 형태의 리스트.
+                    각 원소들은 클래스별 예측한 bbox 정보
+
+            np.vstack(result): (?, 5) 형태의 ndarray
+            """
             cnt += len(np.vstack(result))
         cnt /= len(results)
         self.bbox_num = cnt
