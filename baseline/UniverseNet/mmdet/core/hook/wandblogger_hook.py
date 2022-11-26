@@ -3,9 +3,12 @@ import importlib
 import os.path as osp
 import sys
 import warnings
+import io
 
 import mmcv
 import numpy as np
+import matplotlib.pyplot as plt
+from PIL import Image
 import pycocotools.mask as mask_util
 from mmcv.runner import HOOKS
 from mmcv.runner.dist_utils import master_only
@@ -375,7 +378,8 @@ class MMDetWandbHook(WandbLoggerHook):
             wandb_boxes = self._get_wandb_bboxes(bboxes, labels)
 
             # Get dict of masks to be logged.
-            if masks is not None:
+            # if masks is not None:
+            if False: #TODO: 임시조치
                 wandb_masks = self._get_wandb_masks(
                     masks,
                     labels,
@@ -454,6 +458,20 @@ class MMDetWandbHook(WandbLoggerHook):
                     boxes=wandb_boxes,
                     masks=wandb_masks,
                     classes=self.class_set))
+
+        # 평균 박스 개수 로그
+        n = len(results) # num of images
+        cnt = 0
+        for result in results:
+            """
+            result: [(?, 5), ..., (?, 5)] 형태의 리스트.
+                    각 원소들은 클래스별 예측한 bbox 정보
+
+            np.vstack(result): (?, 5) 형태의 ndarray
+            bbox: (xmin, ymin, xmax, ymax, score) 형태
+            """
+            cnt += len(np.vstack(result))
+        self.bbox_num = cnt / n
 
     def _get_wandb_bboxes(self, bboxes, labels, log_gt=True):
         """Get list of structured dict for logging bounding boxes to W&B.
@@ -579,8 +597,113 @@ class MMDetWandbHook(WandbLoggerHook):
         pred_artifact = self.wandb.Artifact(
             f'run_{self.wandb.run.id}_pred', type='evaluation')
         pred_artifact.add(self.eval_table, 'eval_data')
+
+        #  추가적으로 PR 커브 관련 값 기록
+        self._log_precisons(pred_artifact)
+
         if self.by_epoch:
             aliases = ['latest', f'epoch_{idx}']
         else:
             aliases = ['latest', f'iter_{idx}']
         self.wandb.run.log_artifact(pred_artifact, aliases=aliases)
+
+    @master_only
+    def log(self, runner) -> None:
+        tags = self.get_loggable_tags(runner)
+        if tags:
+            tags['epoch'] = self.epoch = self.get_epoch(runner)
+            if self.with_step:
+                self.wandb.log(
+                    tags, step=self.get_iter(runner), commit=self.commit)
+            else:
+                tags['global_step'] = self.get_iter(runner)
+                self.wandb.log(tags, commit=self.commit)
+    
+    #TODO: 함수 명 좀 더 일반적인 이름으로 바꾸기
+    def _log_precisons(self, artifact):
+        """
+        Validation 된 뒤에 after_train_epoch => _log_eval_table 순서로 호출됨.
+        데이터셋의 Evaluation 정보를 가져와서 Wandb에 기록함.
+
+        cocoEval.params
+            catIds:  [0, ..., 9]
+            imgIds:  [validset에 속한 imgIds]
+            maxDets: [100, 300, 1000]
+            iouThrs: [0.5, 0.55, ..., 0.95]
+        
+        cocoEval.eval['precision'].shape
+            (iou, recall, cls, area range, max dets)
+           =(10,  101,    10,  4,          3       )
+
+        precision 각 차원의 의미하는 것은 다음과 같음. (config의 evaluation을 수정 안했을 경우)
+            iou        [0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95] 
+            recall     [0, 0.01, ... 1]
+            cls        [0, ... 9]
+            area range ['all', 'small', 'medium', 'large']
+            max dets   [100, 300, 1000]
+
+        PR 커브를 그리기 위해 결정해야할 것
+            iou        50
+            recall     전부
+            cls        각 클래스별
+            area range 전부(0)
+            max dets   1000. 대회에서는 최대 박스 개수 제한 없는 듯 함.
+                        (map-boxes 라이브러리라고 가정했을 때)
+        """
+
+        # bbox 개수 불러오고 리셋
+        bbox_num = self.bbox_num
+        self.bbox_num = -1
+
+        # 평과 결과가 없으면 bbox_num만 기록
+        if self.val_dataset.cocoEval is None:
+            self.wandb.log({
+                'val/bbox_num': bbox_num,
+                'epoch': self.epoch,
+            })
+            return
+
+        # 평과 결과 불러오고 리셋
+        cocoEval = self.val_dataset.cocoEval
+        precision = cocoEval.eval['precision']
+        self.val_dataset.cocoEval = None
+
+        assert precision.shape[2] == 10
+
+        fig, ax = plt.subplots(1, 1, figsize=(9, 6), tight_layout=True)
+
+        x = np.linspace(0, 1, 101) # Recall
+
+        # 클래스별 PR 커브
+        for i in range(10):
+            y = precision[0, :, i, 0, 2] # (101, )
+            ax.plot(x, y, linewidth=1, label=f'{self.val_dataset.CLASSES[i]} {np.mean(y):.3f}')
+        
+        # 전체 PR 커브
+        y = precision[0, :, :, 0, 2] # (101, 10)
+        y = np.mean(y, axis=1)       # (101, )
+        ax.plot(x, y, linewidth=3, color='blue', label='all classes %.3f mAP@0.5' % np.mean(y))
+        ax.set_title(f'AP @ IoU50 (Epoch {self.epoch})')
+        ax.set_xlabel('Recall')
+        ax.set_ylabel('Precision')
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        plt.legend(bbox_to_anchor=(1.04, 1), loc='upper left')
+
+        # https://stackoverflow.com/a/61754995/18543724
+        buf = io.BytesIO()
+        fig.savefig(buf)
+        buf.seek(0)
+        img = Image.open(buf)
+
+        # Wandb 관련 코드
+        with artifact.new_file('precions.npz', 'wb') as f:
+            np.savez_compressed(f, precision.astype(np.float16))
+
+        wimg = self.wandb.Image(img)
+        artifact.add(wimg, 'PR-Curve')
+        self.wandb.log({
+            'val/PR-Curve': wimg,
+            'val/bbox_num': bbox_num,
+            'epoch': self.epoch,
+        })
