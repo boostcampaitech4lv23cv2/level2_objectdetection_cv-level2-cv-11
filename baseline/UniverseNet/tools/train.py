@@ -125,12 +125,20 @@ def main():
     args = parse_args()
 
     cfg = Config.fromfile(args.config)
-    # # wandb name/tag 동적할당
-    if args.name != None:
-        cfg.log_config.hooks[1].init_kwargs.name = args.name
-    if args.tags != None:
-        cfg.log_config.hooks[1].init_kwargs.tags = args.tags
 
+    # MMDetWandbHook
+    for hook in cfg.log_config.hooks:
+        if hook.type == 'MMDetWandbHook':
+            # wandb name/tag 동적할당
+            if args.name is not None:
+                hook.init_kwargs.name = args.name
+            if args.tags is not None:
+                hook.init_kwargs.tags = args.tags
+
+            # log_checkpoint 검사
+            if hasattr(hook, 'log_checkpoint'):
+                assert not hook.log_checkpoint
+    
     # replace the ${key} with the value of cfg.key
     cfg = replace_cfg_vals(cfg)
 
