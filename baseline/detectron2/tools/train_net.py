@@ -21,6 +21,9 @@ import os
 from collections import OrderedDict
 import torch
 
+import wandb, yaml
+wandb.login()
+
 import detectron2.utils.comm as comm
 from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import get_cfg
@@ -42,12 +45,12 @@ from detectron2.modeling import GeneralizedRCNNWithTTA
 from detectron2.data.datasets import register_coco_instances
 # Register Dataset
 try:
-    register_coco_instances('coco_trash_train', {}, '../../dataset/train.json', '../../dataset/')
+    register_coco_instances('coco_trash_train', {}, '/opt/ml/dataset/train-kfold-0.json', '/opt/ml/dataset/')
 except AssertionError:
     pass
 
 try:
-    register_coco_instances('coco_trash_test', {}, '../../dataset/test.json', '../../dataset/')
+    register_coco_instances('coco_trash_test', {}, '/opt/ml/dataset/val-kfold-0.json', '/opt/ml/dataset/')
 except AssertionError:
     pass
 
@@ -145,7 +148,9 @@ def setup(args):
 
 def main(args):
     cfg = setup(args)
-
+    cfg_wandb = yaml.safe_load(cfg.dump())
+    wandb.init(project='Detection-Competition', name='detectron_test', config=cfg_wandb, sync_tensorboard=True) 
+    
     if args.eval_only:
         model = Trainer.build_model(cfg)
         DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
@@ -157,6 +162,7 @@ def main(args):
         if comm.is_main_process():
             verify_results(cfg, res)
         return res
+    
 
     """
     If you'd like to do anything fancier than the standard training logic,
