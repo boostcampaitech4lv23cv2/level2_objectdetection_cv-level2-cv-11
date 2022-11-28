@@ -37,9 +37,9 @@ log_config = dict(
             init_kwargs=dict(
                 entity = 'miho',
                 project = 'Detection-Competition', 
-                name = '1123_yr_faster-rcnn-focalloss', 
-                tags = ['swin', 'adamw', 'faster_rcnn', 'focal'],
-                notes = 'faster-rcnn, swin으로 학습 및 wandb 설정 테스트해본 것', 
+                name = '1128_yr_val-test', 
+                tags = ['test'],
+                notes = 'test', 
             ),
              
             # Logging interval (iterations)
