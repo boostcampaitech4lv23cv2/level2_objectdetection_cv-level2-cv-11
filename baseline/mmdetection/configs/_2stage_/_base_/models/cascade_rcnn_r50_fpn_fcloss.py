@@ -30,7 +30,11 @@ model = dict(
             target_means=[.0, .0, .0, .0],
             target_stds=[1.0, 1.0, 1.0, 1.0]),
         loss_cls=dict(
-            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0),
+            type='FocalLoss',
+            use_sigmoid=True,
+            gamma=2.0,
+            alpha=0.25,
+            loss_weight=1.0),
         loss_bbox=dict(type='SmoothL1Loss', beta=1.0 / 9.0, loss_weight=1.0)),
     roi_head=dict(
         type='CascadeRoIHead',
@@ -56,6 +60,8 @@ model = dict(
                 loss_cls=dict(
                     type='FocalLoss',
                     use_sigmoid=True,
+                    gamma=2.0,
+                    alpha=0.25,
                     loss_weight=1.0),
                 loss_bbox=dict(type='SmoothL1Loss', beta=1.0,
                                loss_weight=1.0)),
@@ -73,6 +79,8 @@ model = dict(
                 loss_cls=dict(
                     type='FocalLoss',
                     use_sigmoid=True,
+                    gamma=2.0,
+                    alpha=0.25,
                     loss_weight=1.0),
                 loss_bbox=dict(type='SmoothL1Loss', beta=1.0,
                                loss_weight=1.0)),
@@ -90,6 +98,8 @@ model = dict(
                 loss_cls=dict(
                     type='FocalLoss',
                     use_sigmoid=True,
+                    gamma=2.0,
+                    alpha=0.25,
                     loss_weight=1.0),
                 loss_bbox=dict(type='SmoothL1Loss', beta=1.0, loss_weight=1.0))
         ]),
