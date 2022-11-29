@@ -19,6 +19,9 @@ import time
 import torch
 from torch.nn.parallel import DataParallel, DistributedDataParallel
 
+# import wandb, yaml
+# wandb.login()
+
 from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import LazyConfig, instantiate
 from detectron2.engine import (

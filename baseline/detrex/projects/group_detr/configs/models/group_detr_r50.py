@@ -58,10 +58,10 @@ model = L(GroupDETR)(
         ),
     ),
     embed_dim=256,
-    num_classes=80,
+    num_classes=10,
     num_queries=300,
     criterion=L(GroupSetCriterion)(
-        num_classes=80,
+        num_classes=10,
         matcher=L(GroupHungarianMatcher)(
             cost_class=2.0,
             cost_bbox=5.0,

@@ -11,10 +11,27 @@ from detectron2.evaluation import COCOEvaluator
 
 from detrex.data import DetrDatasetMapper
 
+from detectron2.data import MetadataCatalog
+from detectron2.data.datasets import register_coco_instances
+# Register Dataset
+try:
+    register_coco_instances('coco_trash_train', {}, '/opt/ml/dataset/train-kfold-0.json', '/opt/ml/dataset/')
+except AssertionError:
+    pass
+
+try:
+    register_coco_instances('coco_trash_test', {}, '/opt/ml/dataset/val-kfold-0.json', '/opt/ml/dataset/')
+except AssertionError:
+    pass
+
+MetadataCatalog.get('coco_trash_train').thing_classes = ["General trash", "Paper", "Paper pack", "Metal", 
+                                                         "Glass", "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing"]
+
+
 dataloader = OmegaConf.create()
 
 dataloader.train = L(build_detection_train_loader)(
-    dataset=L(get_detection_dataset_dicts)(names="coco_2017_train"),
+    dataset=L(get_detection_dataset_dicts)(names="coco_trash_train"),
     mapper=L(DetrDatasetMapper)(
         augmentation=[
             L(T.RandomFlip)(),
@@ -49,7 +66,7 @@ dataloader.train = L(build_detection_train_loader)(
 )
 
 dataloader.test = L(build_detection_test_loader)(
-    dataset=L(get_detection_dataset_dicts)(names="coco_2017_val", filter_empty=False),
+    dataset=L(get_detection_dataset_dicts)(names="coco_trash_test", filter_empty=False),
     mapper=L(DetrDatasetMapper)(
         augmentation=[
             L(T.ResizeShortestEdge)(
