@@ -8,7 +8,7 @@ lr_multiplier = get_config("common/coco_schedule.py").lr_multiplier_12ep
 train = get_config("common/train.py").train
 
 # modify training config
-train.init_checkpoint = "/path/to/swin_small_patch4_window7_224.pth"
+train.init_checkpoint = "https://github.com/IDEA-Research/detrex-storage/releases/download/v0.1.1/dino_swin_small_224_4scale_12ep.pth"
 train.output_dir = "./output/dino_swin_small_224_4scale_12ep"
 
 # max training iterations
@@ -44,7 +44,7 @@ dataloader.train.num_workers = 16
 # please notice that this is total batch size.
 # surpose you're using 4 gpus for training and the batch size for
 # each gpu is 16/4 = 4
-dataloader.train.total_batch_size = 16
+dataloader.train.total_batch_size = 4
 
 # dump the testing results into output_dir for visualization
 dataloader.evaluator.output_dir = train.output_dir

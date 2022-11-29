@@ -19,8 +19,8 @@ import time
 import torch
 from torch.nn.parallel import DataParallel, DistributedDataParallel
 
-# import wandb, yaml
-# wandb.login()
+import wandb, yaml
+wandb.login()
 
 from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import LazyConfig, instantiate
@@ -215,6 +215,13 @@ def do_train(args, cfg):
 def main(args):
     cfg = LazyConfig.load(args.config_file)
     cfg = LazyConfig.apply_overrides(cfg, args.opts)
+    
+    wandb.tensorboard.patch(root_logdir=cfg.train.output_dir)
+    wandb.init(project='Detection-Competition', name='1130_gun_dino_tiny', sync_tensorboard=True)
+    
+    # cfg_wandb = yaml.safe_load(cfg.dump())
+    # wandb.init(project='Detection-Competition', name='detectron_test', config=cfg_wandb, sync_tensorboard=True)
+    
     default_setup(cfg, args)
 
     if args.eval_only:
@@ -228,6 +235,9 @@ def main(args):
 
 
 if __name__ == "__main__":
+    import gc
+    gc.collect()
+    torch.cuda.empty_cache()
     args = default_argument_parser().parse_args()
     launch(
         main,
