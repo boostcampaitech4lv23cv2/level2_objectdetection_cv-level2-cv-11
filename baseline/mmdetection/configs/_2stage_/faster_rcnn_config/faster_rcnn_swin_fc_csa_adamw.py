@@ -1,7 +1,7 @@
 _base_ = [
     '../_base_/datasets/coco_detection.py', 
     '../_base_/models/faster_rcnn_r50_fpn_foloss.py', 
-    '../_base_/schedules/schedule_1x.py', 
+    '../_base_/schedules/schedule_1x_CosineAnnealing.py', 
     '../_base_/default_runtime.py'
 ]
 
@@ -27,13 +27,6 @@ model = dict(
         init_cfg=dict(type='Pretrained', checkpoint=pretrained)),
     neck=dict(in_channels=[96, 192, 384, 768]))
 
-optimizer = dict(
-    type='SGD', 
-    lr=0.0001, 
-    momentum=0.9, 
-    weight_decay=0.0001
-)
-
 log_config = dict(
     hooks = [
         dict(type='TextLoggerHook'),       
@@ -42,8 +35,8 @@ log_config = dict(
             init_kwargs=dict(
                 entity = 'miho',
                 project = 'Detection-Competition', 
-                name = '1129_yr_faster-rcnn_swin_fc_step_sgd', 
-                tags = ['faster_rcnn', 'swin', 'sgd', 'steplr', 'focal'],
+                name = '1129_yr_faster-rcnn_swin_fc_csa_adamw', 
+                tags = ['faster_rcnn', 'swin', 'adamw', 'cosineannealing', 'focal'],
                 notes = 'faster-rcnn, swin의 다양한 설정 실험', 
             ),
             # Logging interval (iterations)
