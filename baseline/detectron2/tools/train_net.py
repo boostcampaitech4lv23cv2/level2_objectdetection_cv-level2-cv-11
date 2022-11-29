@@ -153,6 +153,7 @@ def main(args):
      
     cfg.defrost()
     cfg.TEST.EVAL_PERIOD = 100
+    cfg.SOLVER.CHECKPOINT_PERIOD = 100
     
     if args.eval_only:
         model = Trainer.build_model(cfg)
