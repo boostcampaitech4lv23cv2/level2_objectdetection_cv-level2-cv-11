@@ -149,7 +149,11 @@ def setup(args):
 def main(args):
     cfg = setup(args)
     cfg_wandb = yaml.safe_load(cfg.dump())
-    wandb.init(project='Detection-Competition', name='detectron_test', config=cfg_wandb, sync_tensorboard=True) 
+    wandb.init(project='Detection-Competition', name='detectron_test', config=cfg_wandb, sync_tensorboard=True)
+     
+    cfg.defrost()
+    cfg.TEST.EVAL_PERIOD = 100
+    cfg.SOLVER.CHECKPOINT_PERIOD = 100
     
     if args.eval_only:
         model = Trainer.build_model(cfg)
