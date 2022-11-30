@@ -12,3 +12,4 @@ __pycache__/
 wandb/
 work_dirs/
 artifacts/
+/baseline/detrex/output
