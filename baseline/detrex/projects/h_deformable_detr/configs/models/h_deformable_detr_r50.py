@@ -73,14 +73,14 @@ model = L(HDeformableDETR)(
         mixed_selection=True,
     ),
     embed_dim=256,
-    num_classes=80,
+    num_classes=10,
     num_queries_one2one=300,
     num_queries_one2many=1500,
     aux_loss=True,
     with_box_refine=False,
     as_two_stage=False,
     criterion=L(DeformableCriterion)(
-        num_classes=80,
+        num_classes=10,
         matcher=L(HungarianMatcher)(
             cost_class=2.0,
             cost_bbox=5.0,

@@ -17,7 +17,7 @@ train.max_iter = 375000
 train.eval_period = 5000
 
 # log training infomation every 20 iters
-train.log_period = 20
+train.log_period = 100
 
 # save checkpoint every 5000 iters
 train.checkpointer.period = 5000
