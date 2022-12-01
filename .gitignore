@@ -13,3 +13,4 @@ wandb/
 work_dirs/
 artifacts/
 /baseline/detrex/output
+*.csv
