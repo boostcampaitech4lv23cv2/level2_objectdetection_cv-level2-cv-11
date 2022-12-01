@@ -8,7 +8,8 @@ lr_multiplier = get_config("common/coco_schedule.py").lr_multiplier_12ep
 train = get_config("common/train.py").train
 
 # modify training config
-train.init_checkpoint = "https://github.com/IDEA-Research/detrex-storage/releases/download/v0.1.1/dino_swin_tiny_224_22kto1k_finetune_4scale_12ep.pth"
+#train.init_checkpoint = "https://github.com/IDEA-Research/detrex-storage/releases/download/v0.1.1/dino_swin_tiny_224_22kto1k_finetune_4scale_12ep.pth"
+train.init_checkpoint ="/opt/ml/level2_objectdetection_cv-level2-cv-11/baseline/detrex/output/dino_swin_tiny_224_4scale_12ep_22kto1k_finetune/model_0089999.pth"
 train.output_dir = "./output/dino_swin_tiny_224_4scale_12ep_22kto1k_finetune"
 
 # max training iterations

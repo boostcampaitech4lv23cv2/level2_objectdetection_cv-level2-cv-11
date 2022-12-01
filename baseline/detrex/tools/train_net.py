@@ -217,7 +217,7 @@ def main(args):
     cfg = LazyConfig.apply_overrides(cfg, args.opts)
     
     wandb.tensorboard.patch(root_logdir=cfg.train.output_dir)
-    wandb.init(project='Detection-Competition', name='1130_gun_dino_tiny', sync_tensorboard=True)
+    wandb.init(project='Detection-Competition', name='1130_gun_dino_tiny_re', sync_tensorboard=True)
     
     # cfg_wandb = yaml.safe_load(cfg.dump())
     # wandb.init(project='Detection-Competition', name='detectron_test', config=cfg_wandb, sync_tensorboard=True)
