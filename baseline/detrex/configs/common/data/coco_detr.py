@@ -40,8 +40,47 @@ MetadataCatalog.get('coco_trash_train').thing_classes = ["General trash", "Paper
 
 dataloader = OmegaConf.create()
 
+# for train #
+
+# dataloader.train = L(build_detection_train_loader)(
+#     dataset=L(get_detection_dataset_dicts)(names="coco_trash_train"),
+#     mapper=L(DetrDatasetMapper)(
+#         augmentation=[
+#             L(T.RandomFlip)(),
+#             L(T.ResizeShortestEdge)(
+#                 short_edge_length=(480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800),
+#                 max_size=1333,
+#                 sample_style="choice",
+#             ),
+#         ],
+#         augmentation_with_crop=[
+#             L(T.RandomFlip)(),
+#             L(T.ResizeShortestEdge)(
+#                 short_edge_length=(400, 500, 600),
+#                 sample_style="choice",
+#             ),
+#             L(T.RandomCrop)(
+#                 crop_type="absolute_range",
+#                 crop_size=(384, 600),
+#             ),
+#             L(T.ResizeShortestEdge)(
+#                 short_edge_length=(480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800),
+#                 max_size=1333,
+#                 sample_style="choice",
+#             ),
+#         ],
+#         is_train=True,
+#         mask_on=False,
+#         img_format="RGB",
+#     ),
+#     total_batch_size=16,
+#     num_workers=4,
+# )
+
+# for train_pseudo#
+
 dataloader.train = L(build_detection_train_loader)(
-    dataset=L(get_detection_dataset_dicts)(names="coco_trash_train"),
+    dataset=L(get_detection_dataset_dicts)(names="coco_trash_test_pseudo"),
     mapper=L(DetrDatasetMapper)(
         augmentation=[
             L(T.RandomFlip)(),
@@ -74,6 +113,9 @@ dataloader.train = L(build_detection_train_loader)(
     total_batch_size=16,
     num_workers=4,
 )
+
+
+
 
 # for valid #
 
