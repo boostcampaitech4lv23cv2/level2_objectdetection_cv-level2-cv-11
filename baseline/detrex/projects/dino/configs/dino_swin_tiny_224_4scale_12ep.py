@@ -10,19 +10,19 @@ train = get_config("common/train.py").train
 # modify training config
 #train.init_checkpoint = "https://github.com/IDEA-Research/detrex-storage/releases/download/v0.1.1/dino_swin_tiny_224_22kto1k_finetune_4scale_12ep.pth"
 train.init_checkpoint ="/opt/ml/level2_objectdetection_cv-level2-cv-11/baseline/detrex/output/dino_swin_tiny_224_4scale_12ep_22kto1k_finetune/model_0089999.pth"
-train.output_dir = "./output/dino_swin_tiny_224_4scale_12ep_22kto1k_finetune"
+train.output_dir = "./output/dino_swin_tiny_224_4scale_12ep_22kto1k_finetune_pseudo"
 
 # max training iterations
 train.max_iter = 90000
 
 # run evaluation every 5000 iters
-train.eval_period = 5000
+train.eval_period = 1000
 
 # log training infomation every 20 iters
 train.log_period = 100
 
 # save checkpoint every 5000 iters
-train.checkpointer.period = 5000
+train.checkpointer.period = 1000
 
 # gradient clipping for training
 train.clip_grad.enabled = True
@@ -34,9 +34,9 @@ train.device = "cuda"
 model.device = train.device
 
 # modify optimizer config
-optimizer.lr = 1e-4
+optimizer.lr = 1e-5
 optimizer.betas = (0.9, 0.999)
-optimizer.weight_decay = 1e-4
+optimizer.weight_decay = 1e-5
 optimizer.params.lr_factor_func = lambda module_name: 0.1 if "backbone" in module_name else 1
 
 # modify dataloader config

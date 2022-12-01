@@ -29,6 +29,11 @@ try:
 except AssertionError:
     pass
 
+try:
+    register_coco_instances('coco_trash_test_pseudo', {}, '/opt/ml/dataset/train-kfold-0-pseudo-3.json', '/opt/ml/dataset/')
+except AssertionError:
+    pass
+
 MetadataCatalog.get('coco_trash_train').thing_classes = ["General trash", "Paper", "Paper pack", "Metal", 
                                                          "Glass", "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing"]
 
