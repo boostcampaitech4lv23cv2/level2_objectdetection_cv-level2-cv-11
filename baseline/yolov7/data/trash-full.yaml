@@ -2,7 +2,7 @@
 # download: bash ./scripts/get_coco.sh
 
 # train and val data as 1) directory: path/images/, 2) file: path/images.txt, or 3) list: [path1/images/, path2/images/]
-train: /opt/ml/dataset/yolo_train_fold0
+train: /opt/ml/dataset/yolo_full
 val: /opt/ml/dataset/yolo_val_fold0
 test: /opt/ml/dataset/test
 
