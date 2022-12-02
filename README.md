@@ -28,8 +28,8 @@ Ground Truth 박스와 Prediction 박스간 IoU(Intersection Over Union, Detecto
 
 | [류건](https://github.com/jerry-ryu) | [심건희](https://github.com/jane79) | [윤태준](https://github.com/ta1231) | [이강희](https://github.com/ganghe74) | [이예라](https://github.com/Yera10) |
 | :-: | :-: | :-: | :-: | :-: | 
-|![image](https://avatars.githubusercontent.com/u/62556539?v=4)|![image](https://avatars.githubusercontent.com/u/48004826?v=4)|![image](https://avatars.githubusercontent.com/u/54363784?v=4) |![image](https://avatars.githubusercontent.com/u/59161083?s=400&u=e1dddd820da0add63917d38edf39e958471990f2&v=4)  |![image](https://avatars.githubusercontent.com/u/57178359?v=4)|  
-|[Blog](https://kkwong-guin.tistory.com/)  |[Blog](https://velog.io/@goodheart50)|[Blog](https://velog.io/@ta1231)| [Blog](https://99sphere-tech-blog.tistory.com/) | [Blog](https://yedoong.tistory.com/) |
+|![image](https://avatars.githubusercontent.com/u/62556539?v=4)|![image](https://avatars.githubusercontent.com/u/48004826?v=4)|![image](https://avatars.githubusercontent.com/u/54363784?v=4) |![image](https://avatars.githubusercontent.com/u/30896956?v=4)  |![image](https://avatars.githubusercontent.com/u/57178359?v=4)|  
+|[Blog](https://kkwong-guin.tistory.com/)  |[Blog](https://velog.io/@goodheart50)|[Blog](https://velog.io/@ta1231)| Blog | [Blog](https://yedoong.tistory.com/) |
 
 <div align="center">
 
