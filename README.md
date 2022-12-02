@@ -1,5 +1,6 @@
 # level2_objectdetection_cv-level2-cv-11
-![image](https://user-images.githubusercontent.com/62556539/205196049-2fe04bc5-2a0b-47a8-91fa-5077d84064f8.png)
+![image](https://user-images.githubusercontent.com/30896956/205215342-d1431a61-4228-492c-a9d8-0196bdf76556.png)
+
 
 ## 프로젝트 개요
 
