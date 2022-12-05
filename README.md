@@ -40,11 +40,11 @@ level2_objectdetection_cv-level2-cv-11
     └── UniverseNet   # MMDetection 기반 패키지
     └── detectron2
     └── detrex        # Detectron2 기반 패키지
-    └── faster_rcnn   # 사용 X
+    └── faster_rcnn   
     └── mmdetection
     └── yolov7        # 자체 라이브러리
 └── notebooks         # EDA, ensemble, pseudo labeling 등
-└── pytorch-template  # 사용 X
+
 
 ```
 
